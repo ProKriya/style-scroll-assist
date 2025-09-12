@@ -77,42 +77,41 @@ const ShoppingAssistant: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background p-4">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8 animate-fade-in">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="p-3 rounded-full gradient-primary">
-              <Sparkles className="h-8 w-8 text-white" />
+    <div className="h-full bg-background flex flex-col">
+      <div className="flex-1 overflow-hidden">
+        {/* Compact Header */}
+        <div className="text-center mb-4 animate-fade-in px-4 pt-4">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <div className="p-2 rounded-full gradient-primary">
+              <Sparkles className="h-5 w-5 text-white" />
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
               AI Shopping Assistant
             </h1>
           </div>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Discover amazing products with intelligent search and personalized recommendations
+          <p className="text-sm text-muted-foreground">
+            Find exactly what you're looking for
           </p>
         </div>
 
         {/* Chatbot Container */}
-        <div className="chatbot-container max-w-4xl mx-auto animate-scale-in">
-          {/* Chat Header */}
-          <div className="gradient-primary p-4 text-white">
-            <div className="flex items-center gap-3">
-              <MessageCircle className="h-6 w-6" />
+        <div className="chatbot-container flex-1 animate-scale-in flex flex-col">
+          {/* Compact Chat Header */}
+          <div className="gradient-primary p-3 text-white">
+            <div className="flex items-center gap-2">
+              <MessageCircle className="h-5 w-5" />
               <div>
-                <h2 className="font-semibold">Shopping Assistant</h2>
-                <p className="text-sm text-white/80">Find exactly what you're looking for</p>
+                <h2 className="text-sm font-semibold">Shopping Assistant</h2>
               </div>
             </div>
           </div>
 
           {/* Search Section */}
-          <div className="p-6 border-b border-border">
+          <div className="p-4 border-b border-border">
             <SearchBox onSearch={handleSearch} onProductSelect={handleProductSelect} />
             
             {/* Category Filters */}
-            <div className="flex items-center gap-2 mt-4 animate-slide-in">
+            <div className="flex items-center gap-2 mt-3 animate-slide-in">
               <Filter className="h-5 w-5 text-muted-foreground" />
               <div className="flex gap-2 flex-wrap">
                 {categories.map((category) => (
@@ -131,13 +130,13 @@ const ShoppingAssistant: React.FC = () => {
           </div>
 
           {/* Products Section */}
-          <div className="p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-semibold">
-                {searchQuery ? `Results for "${searchQuery}"` : 'Featured Products'}
+          <div className="p-4 flex-1 overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">
+                {searchQuery ? `Results for "${searchQuery}"` : 'Featured'}
               </h3>
-              <Badge variant="secondary" className="text-sm">
-                {filteredProducts.length} products
+              <Badge variant="secondary" className="text-xs">
+                {filteredProducts.length}
               </Badge>
             </div>
 
@@ -145,7 +144,7 @@ const ShoppingAssistant: React.FC = () => {
             <div
               ref={scrollRef}
               onScroll={handleScroll}
-              className="flex gap-4 overflow-x-auto pb-4 scroll-smooth custom-scrollbar"
+              className="flex gap-3 overflow-x-auto pb-4 scroll-smooth custom-scrollbar flex-1"
             >
               {displayedProducts.map((product, index) => (
                 <div key={product.id} className="animate-slide-in" style={{ animationDelay: `${index * 0.1}s` }}>
@@ -154,24 +153,25 @@ const ShoppingAssistant: React.FC = () => {
               ))}
               
               {isLoading && (
-                <div className="min-w-[280px] max-w-[320px] product-card animate-pulse">
-                  <div className="w-full h-48 bg-muted rounded-lg mb-4"></div>
-                  <div className="space-y-3">
-                    <div className="h-4 bg-muted rounded w-3/4"></div>
-                    <div className="h-3 bg-muted rounded w-full"></div>
-                    <div className="h-3 bg-muted rounded w-2/3"></div>
+                <div className="min-w-[240px] max-w-[280px] product-card animate-pulse">
+                  <div className="w-full h-32 bg-muted rounded-lg mb-3"></div>
+                  <div className="space-y-2">
+                    <div className="h-3 bg-muted rounded w-3/4"></div>
+                    <div className="h-2 bg-muted rounded w-full"></div>
+                    <div className="h-2 bg-muted rounded w-2/3"></div>
                   </div>
                 </div>
               )}
 
               {displayedProducts.length < filteredProducts.length && !isLoading && (
-                <div className="min-w-[280px] flex items-center justify-center">
+                <div className="min-w-[240px] flex items-center justify-center">
                   <Button
                     onClick={loadMoreProducts}
                     variant="outline"
-                    className="h-full min-h-[200px] border-dashed border-2 hover:border-primary hover:text-primary transition-all duration-300"
+                    size="sm"
+                    className="h-full min-h-[160px] border-dashed border-2 hover:border-primary hover:text-primary transition-all duration-300"
                   >
-                    Load More Products
+                    Load More
                   </Button>
                 </div>
               )}
@@ -179,17 +179,6 @@ const ShoppingAssistant: React.FC = () => {
           </div>
         </div>
 
-        {/* Related Products Section */}
-        <div className="mt-8 animate-fade-in">
-          <h3 className="text-2xl font-semibold mb-6 text-center">You Might Also Like</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {relatedProducts.map((product, index) => (
-              <div key={product.id} className="animate-slide-in" style={{ animationDelay: `${index * 0.15}s` }}>
-                <ProductCard product={product} onViewDetails={handleViewDetails} />
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   );
