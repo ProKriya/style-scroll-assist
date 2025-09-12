@@ -1,11 +1,13 @@
+import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import ShoppingAssistant from "@/components/ShoppingAssistant";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { ResizablePopup } from "@/components/ResizablePopup";
 import { MessageCircle, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const { toast } = useToast();
+  const [isAssistantOpen, setIsAssistantOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center">
@@ -19,25 +21,29 @@ const Index = () => {
       </div>
       
       {/* Floating Assistant Button */}
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button
-            size="lg"
-            className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-50"
-          >
-            <div className="flex items-center justify-center">
-              <MessageCircle className="h-6 w-6" />
-              <Sparkles className="h-4 w-4 -ml-1 -mt-1" />
-            </div>
-          </Button>
-        </SheetTrigger>
-        <SheetContent 
-          side="right" 
-          className="w-[50vw] h-[50vh] top-[25vh] right-4 rounded-lg border shadow-2xl p-0 overflow-hidden"
-        >
-          <ShoppingAssistant />
-        </SheetContent>
-      </Sheet>
+      <Button
+        size="lg"
+        onClick={() => setIsAssistantOpen(true)}
+        className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-50"
+      >
+        <div className="flex items-center justify-center">
+          <MessageCircle className="h-6 w-6" />
+          <Sparkles className="h-4 w-4 -ml-1 -mt-1" />
+        </div>
+      </Button>
+
+      {/* Resizable Assistant Popup */}
+      <ResizablePopup
+        isOpen={isAssistantOpen}
+        onClose={() => setIsAssistantOpen(false)}
+        title="AI Shopping Assistant"
+        defaultWidth={800}
+        defaultHeight={600}
+        minWidth={600}
+        minHeight={400}
+      >
+        <ShoppingAssistant />
+      </ResizablePopup>
     </div>
   );
 };
