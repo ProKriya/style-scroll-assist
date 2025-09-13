@@ -12,8 +12,7 @@
     "rating_count": "12,456 Ratings",
     "description_snippet": "6.1-inch Super Retina XDR Display, A16 Bionic Chip, 48MP Main Camera",
     "availability": "Available",
-    "scraped_at": "2025-04-05T08:30:00Z",
-    "category": "electronics"
+    "scraped_at": "2025-04-05T08:30:00Z"
   },
   {
     "product_id": "fk_samsung_s24_ultra",
@@ -28,8 +27,7 @@
     "rating_count": "8,912 Ratings",
     "description_snippet": "6.8\" QHD+ Display, Snapdragon 8 Gen 3, 200MP Camera, S Pen",
     "availability": "Available",
-    "scraped_at": "2025-04-05T08:32:00Z",
-    "category": "electronics"
+    "scraped_at": "2025-04-05T08:32:00Z"
   },
   {
     "product_id": "fk_boat_stone_1500",
@@ -44,8 +42,7 @@
     "rating_count": "45,231 Ratings",
     "description_snippet": "50W RMS, 15W Woofer, IPX7 Waterproof, 10H Playback",
     "availability": "Available",
-    "scraped_at": "2025-04-05T08:34:00Z",
-    "category": "gadgets"
+    "scraped_at": "2025-04-05T08:34:00Z"
   },
   {
     "product_id": "fk_fire_boltt_beast",
@@ -60,8 +57,7 @@
     "rating_count": "89,432 Ratings",
     "description_snippet": "1.69\" HD Display, Bluetooth Calling, 8 Days Battery, SpO2",
     "availability": "Available",
-    "scraped_at": "2025-04-05T08:36:00Z",
-    "category": "gadgets"
+    "scraped_at": "2025-04-05T08:36:00Z"
   },
   {
     "product_id": "fk_hp_pavilion_laptop",
@@ -76,8 +72,7 @@
     "rating_count": "3,241 Ratings",
     "description_snippet": "15.6\" FHD, 12th Gen i5, 8GB RAM, 512GB SSD, Windows 11",
     "availability": "Available",
-    "scraped_at": "2025-04-05T08:38:00Z",
-    "category": "electronics"
+    "scraped_at": "2025-04-05T08:38:00Z"
   },
   {
     "product_id": "az_iphone15_pink_128",
@@ -92,8 +87,7 @@
     "rating_count": "18,342 ratings",
     "description_snippet": "Dynamic Island, 48MP Main Camera, USB-C, All-Day Battery",
     "availability": "In stock",
-    "scraped_at": "2025-04-05T08:40:00Z",
-    "category": "electronics"
+    "scraped_at": "2025-04-05T08:40:00Z"
   },
   {
     "product_id": "az_samsung_s24_ultra",
@@ -108,8 +102,7 @@
     "rating_count": "6,789 ratings",
     "description_snippet": "AI-Powered Camera, 6.8\" QHD+ Display, Snapdragon 8 Gen 3",
     "availability": "In stock",
-    "scraped_at": "2025-04-05T08:42:00Z",
-    "category": "electronics"
+    "scraped_at": "2025-04-05T08:42:00Z"
   },
   {
     "product_id": "az_boat_stone_1500",
@@ -124,8 +117,7 @@
     "rating_count": "56,789 ratings",
     "description_snippet": "Massive 50W Sound, IPX7 Waterproof, TWS Pairing, USB Playback",
     "availability": "In stock",
-    "scraped_at": "2025-04-05T08:44:00Z",
-    "category": "gadgets"
+    "scraped_at": "2025-04-05T08:44:00Z"
   },
   {
     "product_id": "az_fire_boltt_beast",
@@ -140,8 +132,7 @@
     "rating_count": "112,345 ratings",
     "description_snippet": "1.69\" HD Display, Bluetooth Calling, 120+ Sports Modes, SpO2",
     "availability": "In stock",
-    "scraped_at": "2025-04-05T08:46:00Z",
-    "category": "gadgets"
+    "scraped_at": "2025-04-05T08:46:00Z"
   },
   {
     "product_id": "az_hp_pavilion_laptop",
@@ -156,7 +147,6 @@
     "rating_count": "2,987 ratings",
     "description_snippet": "15.6\" FHD, 12th Gen i5, 8GB DDR4, 512GB SSD, Windows 11",
     "availability": "In stock",
-    "scraped_at": "2025-04-05T08:48:00Z",
-    "category": "electronics"
+    "scraped_at": "2025-04-05T08:48:00Z"
   }
 ]
