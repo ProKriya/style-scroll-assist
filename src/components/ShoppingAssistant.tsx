@@ -4,25 +4,48 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import SearchBox from './SearchBox';
 import ProductCard from './ProductCard';
-import { products, categories } from '@/data/products';
+import { loadProducts, categories } from '@/data/products';
 import type { Product } from '@/data/products';
 
 const ShoppingAssistant: React.FC = () => {
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [displayedProducts, setDisplayedProducts] = useState<Product[]>(products.slice(0, 6));
-  const [relatedProducts, setRelatedProducts] = useState<Product[]>(products.slice(6, 10));
+  const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Load products on component mount
   useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const loadedProducts = await loadProducts();
+        setProducts(loadedProducts);
+        setFilteredProducts(loadedProducts);
+        setDisplayedProducts(loadedProducts.slice(0, 6));
+        setRelatedProducts(loadedProducts.slice(6, 10));
+      } catch (error) {
+        console.error('Failed to load products:', error);
+      } finally {
+        setIsInitialLoading(false);
+      }
+    };
+    
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    if (products.length === 0) return;
+    
     let filtered = products;
 
     if (searchQuery) {
       filtered = products.filter(product =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.description_snippet.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.category.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
@@ -37,7 +60,7 @@ const ShoppingAssistant: React.FC = () => {
     // Update related products based on current selection
     const remaining = filtered.slice(6);
     setRelatedProducts(remaining.length > 0 ? remaining.slice(0, 4) : products.slice(0, 4));
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory, products]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -131,51 +154,60 @@ const ShoppingAssistant: React.FC = () => {
 
           {/* Products Section */}
           <div className="p-4 flex-1 overflow-hidden flex flex-col">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">
-                {searchQuery ? `Results for "${searchQuery}"` : 'Featured'}
-              </h3>
-              <Badge variant="secondary" className="text-xs">
-                {filteredProducts.length}
-              </Badge>
-            </div>
+            {isInitialLoading ? (
+              <div className="flex items-center justify-center h-64">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                <span className="ml-2 text-muted-foreground">Loading products...</span>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold">
+                    {searchQuery ? `Results for "${searchQuery}"` : 'Featured'}
+                  </h3>
+                  <Badge variant="secondary" className="text-xs">
+                    {filteredProducts.length}
+                  </Badge>
+                </div>
 
-            {/* Horizontal Scrollable Product List */}
-            <div
-              ref={scrollRef}
-              onScroll={handleScroll}
-              className="flex gap-3 overflow-x-auto pb-4 scroll-smooth custom-scrollbar flex-1"
-            >
-              {displayedProducts.map((product, index) => (
-                <div key={product.id} className="animate-slide-in" style={{ animationDelay: `${index * 0.1}s` }}>
-                  <ProductCard product={product} onViewDetails={handleViewDetails} />
-                </div>
-              ))}
-              
-              {isLoading && (
-                <div className="min-w-[240px] max-w-[280px] product-card animate-pulse">
-                  <div className="w-full h-32 bg-muted rounded-lg mb-3"></div>
-                  <div className="space-y-2">
-                    <div className="h-3 bg-muted rounded w-3/4"></div>
-                    <div className="h-2 bg-muted rounded w-full"></div>
-                    <div className="h-2 bg-muted rounded w-2/3"></div>
-                  </div>
-                </div>
-              )}
+                {/* Horizontal Scrollable Product List */}
+                <div
+                  ref={scrollRef}
+                  onScroll={handleScroll}
+                  className="flex gap-3 overflow-x-auto pb-4 scroll-smooth custom-scrollbar flex-1"
+                >
+                  {displayedProducts.map((product, index) => (
+                    <div key={product.product_id} className="animate-slide-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                      <ProductCard product={product} onViewDetails={handleViewDetails} />
+                    </div>
+                  ))}
+                  
+                  {isLoading && (
+                    <div className="min-w-[240px] max-w-[280px] product-card animate-pulse">
+                      <div className="w-full h-32 bg-muted rounded-lg mb-3"></div>
+                      <div className="space-y-2">
+                        <div className="h-3 bg-muted rounded w-3/4"></div>
+                        <div className="h-2 bg-muted rounded w-full"></div>
+                        <div className="h-2 bg-muted rounded w-2/3"></div>
+                      </div>
+                    </div>
+                  )}
 
-              {displayedProducts.length < filteredProducts.length && !isLoading && (
-                <div className="min-w-[240px] flex items-center justify-center">
-                  <Button
-                    onClick={loadMoreProducts}
-                    variant="outline"
-                    size="sm"
-                    className="h-full min-h-[160px] border-dashed border-2 hover:border-primary hover:text-primary transition-all duration-300"
-                  >
-                    Load More
-                  </Button>
+                  {displayedProducts.length < filteredProducts.length && !isLoading && (
+                    <div className="min-w-[240px] flex items-center justify-center">
+                      <Button
+                        onClick={loadMoreProducts}
+                        variant="outline"
+                        size="sm"
+                        className="h-full min-h-[160px] border-dashed border-2 hover:border-primary hover:text-primary transition-all duration-300"
+                      >
+                        Load More
+                      </Button>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              </>
+            )}
           </div>
         </div>
 

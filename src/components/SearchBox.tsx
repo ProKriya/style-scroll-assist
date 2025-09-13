@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { products, searchSuggestions, categories } from '@/data/products';
+import { loadProducts, searchSuggestions, categories } from '@/data/products';
+import type { Product } from '@/data/products';
 
 interface SearchBoxProps {
   onSearch: (query: string) => void;
@@ -12,8 +13,19 @@ const SearchBox: React.FC<SearchBoxProps> = ({ onSearch, onProductSelect }) => {
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState(products.slice(0, 5));
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const searchRef = useRef<HTMLDivElement>(null);
+
+  // Load products on component mount
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const loadedProducts = await loadProducts();
+      setProducts(loadedProducts);
+      setFilteredProducts(loadedProducts.slice(0, 5));
+    };
+    fetchProducts();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -34,8 +46,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({ onSearch, onProductSelect }) => {
       setFilteredSuggestions(suggestions.slice(0, 5));
 
       const productResults = products.filter(product =>
-        product.name.toLowerCase().includes(query.toLowerCase()) ||
-        product.description.toLowerCase().includes(query.toLowerCase()) ||
+        product.title.toLowerCase().includes(query.toLowerCase()) ||
+        product.description_snippet.toLowerCase().includes(query.toLowerCase()) ||
         product.category.toLowerCase().includes(query.toLowerCase())
       );
       setFilteredProducts(productResults.slice(0, 5));
@@ -43,7 +55,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({ onSearch, onProductSelect }) => {
       setFilteredSuggestions([]);
       setFilteredProducts(products.slice(0, 5));
     }
-  }, [query]);
+  }, [query, products]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -132,27 +144,30 @@ const SearchBox: React.FC<SearchBoxProps> = ({ onSearch, onProductSelect }) => {
               <h3 className="text-sm font-semibold text-muted-foreground p-4 pb-2">Products</h3>
               {filteredProducts.map((product) => (
                 <div
-                  key={product.id}
-                  onClick={() => handleProductClick(product.id)}
+                  key={product.product_id}
+                  onClick={() => handleProductClick(product.product_id)}
                   className="autocomplete-item"
                 >
                   <img
-                    src={product.image}
-                    alt={product.name}
+                    src={product.image_url}
+                    alt={product.title}
                     className="w-12 h-12 rounded-lg object-cover bg-muted"
+                    loading="lazy"
                   />
                   <div className="flex-1">
-                    <p className="font-medium">{product.name}</p>
+                    <p className="font-medium">{product.title}</p>
                     <p className="text-sm text-muted-foreground">
-                      ${product.discountedPrice} 
-                      <span className="ml-2 price-original">${product.price}</span>
+                      ₹{product.price.toLocaleString()} 
+                      {product.price < product.mrp && (
+                        <span className="ml-2 price-original">₹{product.mrp.toLocaleString()}</span>
+                      )}
                     </p>
                   </div>
                   <div className="text-right">
                     <div className="flex text-yellow-400">
-                      {'★'.repeat(Math.floor(product.rating))}
+                      <span className="text-xs">★ {product.rating}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground">{product.reviews} reviews</p>
+                    <p className="text-xs text-muted-foreground">{product.rating_count}</p>
                   </div>
                 </div>
               ))}

@@ -11,18 +11,42 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails }) => {
-  const discountPercentage = Math.round(((product.price - product.discountedPrice) / product.price) * 100);
+  const discountPercentage = Math.round(((product.mrp - product.price) / product.mrp) * 100);
+  const hasDiscount = product.price < product.mrp;
+  const formattedPrice = new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: product.currency,
+    minimumFractionDigits: 0,
+  }).format(product.price);
+  const formattedMrp = new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: product.currency,
+    minimumFractionDigits: 0,
+  }).format(product.mrp);
+
+  const handleCardClick = () => {
+    window.open(product.product_url, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleViewClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onViewDetails(product.product_id);
+  };
 
   return (
-    <div className="product-card min-w-[240px] max-w-[280px] group cursor-pointer hover-scale">
+    <div 
+      className="product-card min-w-[240px] max-w-[280px] group cursor-pointer hover-scale"
+      onClick={handleCardClick}
+    >
       <Card className="h-full overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300">
         <div className="relative overflow-hidden">
           <img
-            src={product.image}
-            alt={product.name}
+            src={product.image_url}
+            alt={product.title}
             className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
+            loading="lazy"
           />
-          {discountPercentage > 0 && (
+          {hasDiscount && (
             <Badge 
               variant="destructive" 
               className="absolute top-1 left-1 text-xs font-bold animate-bounce-subtle"
@@ -30,15 +54,21 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails }) => 
               -{discountPercentage}%
             </Badge>
           )}
+          <Badge 
+            variant="secondary" 
+            className="absolute top-1 right-1 text-xs"
+          >
+            {product.vendor}
+          </Badge>
         </div>
 
         <CardContent className="p-3 space-y-2">
           <div className="space-y-1">
             <h3 className="font-semibold text-sm text-foreground line-clamp-2 leading-tight">
-              {product.name}
+              {product.title}
             </h3>
             <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-              {product.description}
+              {product.description_snippet}
             </p>
           </div>
 
@@ -46,33 +76,25 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onViewDetails }) => 
             <div className="space-y-1 flex-1">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-bold text-primary">
-                  ${product.discountedPrice}
+                  {formattedPrice}
                 </span>
-                {product.discountedPrice < product.price && (
+                {hasDiscount && (
                   <span className="text-xs text-muted-foreground line-through">
-                    ${product.price}
+                    {formattedMrp}
                   </span>
                 )}
               </div>
-              {product.colors && product.colors.length > 0 && (
-                <div className="flex gap-1">
-                  {product.colors.slice(0, 3).map((color, index) => (
-                    <div
-                      key={index}
-                      className="w-3 h-3 rounded-full border border-white shadow-sm"
-                      style={{ backgroundColor: color.hex }}
-                    />
-                  ))}
-                </div>
-              )}
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-yellow-500">★</span>
+                <span className="text-xs text-muted-foreground">
+                  {product.rating}
+                </span>
+              </div>
             </div>
 
             <Button
               size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                onViewDetails(product.id);
-              }}
+              onClick={handleViewClick}
               className="shrink-0 text-xs px-2 h-7"
             >
               View
