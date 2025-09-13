@@ -44,9 +44,9 @@ const ShoppingAssistant: React.FC = () => {
 
     if (searchQuery) {
       filtered = products.filter(product =>
-        product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description_snippet.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchQuery.toLowerCase())
+        product.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.description_snippet?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.category?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 

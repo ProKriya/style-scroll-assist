@@ -46,9 +46,9 @@ const SearchBox: React.FC<SearchBoxProps> = ({ onSearch, onProductSelect }) => {
       setFilteredSuggestions(suggestions.slice(0, 5));
 
       const productResults = products.filter(product =>
-        product.title.toLowerCase().includes(query.toLowerCase()) ||
-        product.description_snippet.toLowerCase().includes(query.toLowerCase()) ||
-        product.category.toLowerCase().includes(query.toLowerCase())
+        product.title?.toLowerCase().includes(query.toLowerCase()) ||
+        product.description_snippet?.toLowerCase().includes(query.toLowerCase()) ||
+        product.category?.toLowerCase().includes(query.toLowerCase())
       );
       setFilteredProducts(productResults.slice(0, 5));
     } else {
